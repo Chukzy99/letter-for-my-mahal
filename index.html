@@ -5,7 +5,7 @@
   <title>Letter</title>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,600&display=swap');
 
     body{
       margin:0;
@@ -62,13 +62,18 @@
     .letter{
       position:absolute;
       left:50%;
-      bottom:15px;
-      width:240px;
-      height:160px;
+      bottom:12px;
+
+      /* bigger paper */
+      width:270px;
+      height:230px;
+
       transform:translateX(-50%) translateY(0);
       transition:transform .7s ease;
       z-index:20;
-      pointer-events:none;
+
+      /* FIX SCROLL: allow mouse/scroll */
+      pointer-events:auto;
     }
 
     .paper{
@@ -79,12 +84,16 @@
       box-shadow:0 8px 16px rgba(0,0,0,.15);
       height:100%;
       box-sizing:border-box;
-      overflow:auto;
 
-      /* love letter font */
-      font-family: "Great Vibes", cursive;
+      /* scroll works now */
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+
+      /* less cursive, still romantic */
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
       font-size: 20px;
-      line-height: 1.35;
+      line-height: 1.5;
     }
 
     /* ENVELOPE BODY */
@@ -148,8 +157,9 @@
       z-index:10;
     }
 
+    /* pull letter higher (because paper is bigger now) */
     #envelope.open .letter{
-      transform:translateX(-50%) translateY(-160px);
+      transform:translateX(-50%) translateY(-220px);
       z-index:50;
     }
 
