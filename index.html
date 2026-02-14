@@ -5,341 +5,334 @@
 <title>Letter</title>
 
 <style>
-  body{
-    margin:0;
-    background:#f2aebaef;
-    font-family:monospace;
-    text-align:center;
-    padding-top:80px;
-  }
+body{
+  margin:0;
+  background:#f2aebaef;
+  font-family:monospace;
+  text-align:center;
+  padding-top:80px;
+}
 
-  input{
-    padding:10px;
-    font-size:16px;
-    border-radius:6px;
-    border:1px solid #ccc;
-  }
+input{
+  padding:10px;
+  font-size:16px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
 
-  button{
-    padding:10px 20px;
-    font-size:16px;
-    border:none;
-    border-radius:6px;
-    background:#ff5c8a;
-    color:white;
-    cursor:pointer;
-  }
+button{
+  padding:10px 20px;
+  font-size:16px;
+  border:none;
+  border-radius:6px;
+  background:#ff5c8a;
+  color:white;
+  cursor:pointer;
+}
 
-  #error{ color:red; margin-top:10px; font-size:24px; }
-  #message{ color:#ff5c8a; margin-top:10px; font-weight:bold; font-size:32px; }
+#error{ color:red; margin-top:10px; font-size:24px; }
+#message{ color:#ff5c8a; margin-top:10px; font-weight:bold; font-size:32px; }
 
-  #envelopeArea{
-    display:none;
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-  }
+#envelopeArea{
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+}
 
-  /* overlay for unfolded letter */
-  #letterOverlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.18);
-    display:none;
-    z-index:9998;
-  }
-  #letterOverlay.show{ display:block; }
+/* overlay for unfolded letter */
+#letterOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.18);
+  display:none;
+  z-index:9998;
+}
+#letterOverlay.show{ display:block; }
 
-  /* ENVELOPE WRAPPER */
-  #envelope{
-    width:280px;
-    height:180px;
-    position:relative;
-    cursor:pointer;
-    transform-style:preserve-3d;
-    perspective:1000px;
-    overflow:hidden;
-    border-radius:16px;
-  }
-  #envelope.open{ overflow:visible; }
+/* ENVELOPE WRAPPER */
+#envelope{
+  width:280px;
+  height:180px;
+  position:relative;
+  cursor:pointer;
+  transform-style:preserve-3d;
+  perspective:1000px;
+  overflow:hidden;
+  border-radius:16px;
+}
+#envelope.open{ overflow:visible; }
 
-  /* SLOT */
-  #letterSlot{
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    z-index:50;
-  }
+/* SLOT */
+#letterSlot{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:50;
+}
 
-  /* LETTER */
-  .letter{
-    position:absolute;
-    left:50%;
-    bottom:12px;
-    width:210px;
-    height:150px;
-    transform:translateX(-50%) translateY(220px);
-    z-index:60;
-    transition:transform .7s ease,width .35s ease,height .35s ease,opacity .15s ease,visibility .15s ease;
-    border-radius:12px;
-    pointer-events:auto;
-  }
+/* LETTER */
+.letter{
+  position:absolute;
+  left:50%;
+  bottom:12px;
+  width:210px;
+  height:150px;
+  transform:translateX(-50%) translateY(220px);
+  z-index:60;
+  transition:transform .7s ease,width .35s ease,height .35s ease,opacity .15s ease,visibility .15s ease;
+  border-radius:12px;
+  pointer-events:auto;
+}
 
-  #envelope:not(.open) .letter{
-    opacity:0;
-    visibility:hidden;
-    pointer-events:none;
-  }
+#envelope:not(.open) .letter{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
 
-  #envelope.open .letter{
-    opacity:1;
-    visibility:visible;
-    pointer-events:auto;
-    transform:translateX(-50%) translateY(-135px);
-    z-index:70;
-  }
+#envelope.open .letter{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateX(-50%) translateY(-135px);
+  z-index:70;
+}
 
-  /* PAPER */
-  .paper{
-    position:relative;
-    height:100%;
-    box-sizing:border-box;
-    padding:14px 16px;
-    text-align:left;
+/* PAPER (MAKE EVERYTHING MATCH THE GREETING FONT) */
+.paper{
+  position:relative;
+  height:100%;
+  box-sizing:border-box;
+  padding:14px 16px;
+  text-align:left;
 
-    /* readable love-letter body font */
-    font-family: Georgia, "Times New Roman", serif;
-    font-size:18px;
-    line-height:1.55;
+  /* cursive for whole letter */
+  font-family:"Brush Script MT","Lucida Handwriting","Apple Chancery",cursive;
+  font-size:24px;
+  line-height:1.55;
 
-    border-radius:12px;
-    overflow:hidden;
+  border-radius:12px;
+  overflow:hidden;
 
-    background:
-      repeating-linear-gradient(
-        45deg,
-        rgba(0,0,0,0.02),
-        rgba(0,0,0,0.02) 2px,
-        rgba(255,255,255,0.02) 2px,
-        rgba(255,255,255,0.02) 4px
-      ),
-      linear-gradient(#fff,#fbfbfb);
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0.02),
+      rgba(0,0,0,0.02) 2px,
+      rgba(255,255,255,0.02) 2px,
+      rgba(255,255,255,0.02) 4px
+    ),
+    linear-gradient(#fff,#fbfbfb);
 
-    box-shadow:
-      0 14px 26px rgba(0,0,0,.22),
-      inset 0 -14px 22px rgba(0,0,0,.06);
-  }
+  box-shadow:
+    0 14px 26px rgba(0,0,0,.22),
+    inset 0 -14px 22px rgba(0,0,0,.06);
+}
 
-  /* cursive for greeting + signature only */
-  .greeting,
-  .signature,
-  .signatureLine{
-    font-family: "Brush Script MT","Lucida Handwriting","Apple Chancery",cursive;
-  }
-  .greeting{
-    font-size:26px;
-    margin:0 0 12px 0;
-  }
+.greeting{
+  font-size:30px;
+  margin:0 0 12px 0;
+}
 
-  /* ===== FOLDED STATE (no readable text) ===== */
-  #envelope.open .letter:not(.unfolded) .paper{
-    padding:0;
-    overflow:hidden;
-    color:transparent;
-    text-shadow:none;
-  }
+/* ===== FOLDED STATE (no readable text) ===== */
+#envelope.open .letter:not(.unfolded) .paper{
+  padding:0;
+  overflow:hidden;
+  color:transparent;
+  text-shadow:none;
+}
 
-  #envelope.open .letter:not(.unfolded) .paper::before,
-  #envelope.open .letter:not(.unfolded) .paper::after{
-    content:"";
-    position:absolute;
-    left:10px;
-    right:10px;
-    height:1px;
-    background:rgba(0,0,0,0.18);
-    box-shadow:0 1px 0 rgba(255,255,255,0.35);
-  }
-  #envelope.open .letter:not(.unfolded) .paper::before{ top:33%; }
-  #envelope.open .letter:not(.unfolded) .paper::after{ top:66%; }
+#envelope.open .letter:not(.unfolded) .paper::before,
+#envelope.open .letter:not(.unfolded) .paper::after{
+  content:"";
+  position:absolute;
+  left:10px;
+  right:10px;
+  height:1px;
+  background:rgba(0,0,0,0.18);
+  box-shadow:0 1px 0 rgba(255,255,255,0.35);
+}
+#envelope.open .letter:not(.unfolded) .paper::before{ top:33%; }
+#envelope.open .letter:not(.unfolded) .paper::after{ top:66%; }
 
-  /* ===== UNFOLDED (A4) ===== */
-  .letter.unfolded{
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    z-index:9999;
+/* ===== UNFOLDED (A4) ===== */
+.letter.unfolded{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  z-index:9999;
 
-    width:min(90vw, 850px);
-    height:min(88vh, 1000px);
-    aspect-ratio:210 / 297;
-  }
+  width:min(90vw, 850px);
+  height:min(88vh, 1000px);
+  aspect-ratio:210 / 297;
+}
 
-  .letter.unfolded .paper{
-    padding:70px 75px;
-    font-size:19px;
-    line-height:1.85;
-    letter-spacing:0.2px;
-    overflow:auto;
-    color:#000;
-  }
+.letter.unfolded .paper{
+  padding:70px 75px;
+  font-size:26px;
+  line-height:1.75;
+  letter-spacing:0.2px;
+  overflow:auto;
+  color:#000;
+}
 
-  /* Word-like paragraph spacing + indent (NOT for greeting / signatureLine) */
-  .letter.unfolded .paper p{
-    margin:0 0 18px 0;
-  }
-  .letter.unfolded .paper p:not(.greeting):not(.signatureLine){
-    text-indent:40px;
-  }
+/* spacing + indent */
+.letter.unfolded .paper p{
+  margin:0 0 18px 0;
+}
+.letter.unfolded .paper p:not(.greeting):not(.signatureLine){
+  text-indent:40px;
+}
 
-  /* signature block to the right */
-  .signature{
-    margin-top:35px;
-    text-align:right;
-    font-size:24px;
-  }
-  .signature .signatureLine{
-    margin:0;
-    text-indent:0;
-    font-size:24px;
-  }
+/* signature block */
+.signature{
+  margin-top:35px;
+  text-align:right;
+  font-size:28px;
+}
+.signature .signatureLine{
+  margin:0;
+  text-indent:0;
+}
 
-  /* ENVELOPE BODY */
-  .envBody{
-    position:absolute;
-    left:0;
-    bottom:0;
-    width:280px;
-    height:180px;
-    background:#f0dade;
-    border-radius:16px;
-    box-shadow:0 12px 26px rgba(0,0,0,.18);
-    overflow:hidden;
-    z-index:30;
-    pointer-events:none;
-  }
+/* ENVELOPE BODY */
+.envBody{
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:280px;
+  height:180px;
+  background:#f0dade;
+  border-radius:16px;
+  box-shadow:0 12px 26px rgba(0,0,0,.18);
+  overflow:hidden;
+  z-index:30;
+  pointer-events:none;
+}
 
-  .leftFold,.rightFold,.bottomFold{
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-  }
+.leftFold,.rightFold,.bottomFold{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
 
-  .leftFold{
-    background:rgba(243,168,187,.55);
-    clip-path:polygon(0 0, 0 100%, 50% 55%);
-  }
-  .rightFold{
-    background:rgba(243,168,187,.55);
-    clip-path:polygon(100% 0, 100% 100%, 50% 55%);
-  }
-  .bottomFold{
-    background:#ee8ea7;
-    clip-path:polygon(-2% 100%, 100% 100%, 50% 55%);
-  }
+.leftFold{
+  background:rgba(243,168,187,.55);
+  clip-path:polygon(0 0, 0 100%, 50% 55%);
+}
+.rightFold{
+  background:rgba(243,168,187,.55);
+  clip-path:polygon(100% 0, 100% 100%, 50% 55%);
+}
+.bottomFold{
+  background:#ee8ea7;
+  clip-path:polygon(-2% 100%, 100% 100%, 50% 55%);
+}
 
-  /* TOP FLAP */
-  .topFlap{
-    position:absolute;
-    left:0;
-    top:0;
-    width:280px;
-    height:100px;
-    background:#ff2a3f;
-    clip-path:polygon(0 0,100% 0,50% 100%);
-    transform-origin:50% 0;
-    transform:rotateX(0deg);
-    transition:transform .6s ease;
-    border-radius:16px 16px 0 0;
-    z-index:80;
-  }
-  #envelope.open .topFlap{
-    transform:rotateX(-180deg);
-    z-index:10;
-  }
+/* TOP FLAP */
+.topFlap{
+  position:absolute;
+  left:0;
+  top:0;
+  width:280px;
+  height:100px;
+  background:#ff2a3f;
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  transform-origin:50% 0;
+  transform:rotateX(0deg);
+  transition:transform .6s ease;
+  border-radius:16px 16px 0 0;
+  z-index:80;
+}
+#envelope.open .topFlap{
+  transform:rotateX(-180deg);
+  z-index:10;
+}
 
-  /* HEART (stable) */
-  .heart{
-    position:absolute;
-    left:50%;
-    top:60%;
-    width:28px;
-    height:28px;
-    background:#c21833;
-    transform:translate(-50%,-50%) rotate(45deg);
-    z-index:200;
-    box-shadow:0 8px 14px rgba(0,0,0,.28);
-    transition:opacity .25s ease, transform .25s ease;
-    pointer-events:none;
-  }
-  .heart::before,
-  .heart::after{
-    content:"";
-    position:absolute;
-    width:28px;
-    height:28px;
-    background:#c21833;
-    border-radius:50%;
-  }
-  .heart::before{ top:-14px; left:0; }
-  .heart::after{ left:-14px; top:0; }
+/* HEART */
+.heart{
+  position:absolute;
+  left:50%;
+  top:60%;
+  width:28px;
+  height:28px;
+  background:#c21833;
+  transform:translate(-50%,-50%) rotate(45deg);
+  z-index:200;
+  box-shadow:0 8px 14px rgba(0,0,0,.28);
+  transition:opacity .25s ease, transform .25s ease;
+  pointer-events:none;
+}
+.heart::before,
+.heart::after{
+  content:"";
+  position:absolute;
+  width:28px;
+  height:28px;
+  background:#c21833;
+  border-radius:50%;
+}
+.heart::before{ top:-14px; left:0; }
+.heart::after{ left:-14px; top:0; }
 
-  #envelope.open .heart{
-    opacity:0;
-    transform:translate(-50%,-50%) rotate(45deg) scale(.7);
-  }
+#envelope.open .heart{
+  opacity:0;
+  transform:translate(-50%,-50%) rotate(45deg) scale(.7);
+}
 
-  /* DONE BTN */
-  #doneBtn{
-    margin-top:18px;
-    display:none;
-  }
+/* DONE BTN */
+#doneBtn{
+  margin-top:18px;
+  display:none;
+}
 
-  /* BOUQUET */
-  #bouquet{
-    position:fixed;
-    inset:0;
-    display:none;
-    place-items:center;
-    background:rgba(0,0,0,.2);
-    z-index:10000;
-  }
-  #bouquet.show{ display:grid; }
+/* BOUQUET */
+#bouquet{
+  position:fixed;
+  inset:0;
+  display:none;
+  place-items:center;
+  background:rgba(0,0,0,.2);
+  z-index:10000;
+}
+#bouquet.show{ display:grid; }
 
-  .bouquetCard{
-    width:320px;
-    border-radius:18px;
-    background:#fff;
-    padding:18px 18px 14px;
-    box-shadow:0 18px 50px rgba(0,0,0,.22);
-  }
-  .bouquetImg{
-    width:220px;
-    height:auto;
-    display:block;
-    margin:0 auto 12px auto;
-  }
-  .bouquetText{
-    font-size:18px;
-    color:#ff5c8a;
-    font-weight:bold;
-    margin-bottom:10px;
-  }
-  .bouquetClue{
-    margin-top:6px;
-    font-family:monospace;
-  }
-  .closeBouquet{
-    display:block;
-    margin:16px auto 0 auto;
-    padding:8px 20px;
-    border:none;
-    border-radius:8px;
-    background:#ff5c8a;
-    color:white;
-    cursor:pointer;
-  }
+.bouquetCard{
+  width:320px;
+  border-radius:18px;
+  background:#fff;
+  padding:18px 18px 14px;
+  box-shadow:0 18px 50px rgba(0,0,0,.22);
+}
+.bouquetImg{
+  width:220px;
+  height:auto;
+  display:block;
+  margin:0 auto 12px auto;
+}
+.bouquetText{
+  font-size:18px;
+  color:#ff5c8a;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+.bouquetClue{
+  margin-top:6px;
+  font-family:monospace;
+}
+.closeBouquet{
+  display:block;
+  margin:16px auto 0 auto;
+  padding:8px 20px;
+  border:none;
+  border-radius:8px;
+  background:#ff5c8a;
+  color:white;
+  cursor:pointer;
+}
 </style>
 </head>
 
@@ -358,6 +351,7 @@
 
   <div id="envelopeArea">
     <div id="envelope" onclick="openEnvelope()">
+
       <div id="letterSlot">
         <div class="letter" id="letter" onclick="toggleLetter(event)">
           <div class="paper">
@@ -458,6 +452,9 @@
     env.classList.add("open");
     env.onclick = null;
 
+    /* SHOW done button as soon as envelope opens */
+    document.getElementById("doneBtn").style.display = "inline-block";
+
     const music = document.getElementById("bgMusic");
     music.volume = 0;
     music.play().catch(() => {});
@@ -476,8 +473,7 @@
       document.body.appendChild(el);
       el.classList.add("unfolded");
       overlay().classList.add("show");
-
-      /* show "done reading?" WHEN letter opens (unfolds) */
+      /* also keep it visible here */
       document.getElementById("doneBtn").style.display = "inline-block";
     } else {
       foldBack();
@@ -489,6 +485,7 @@
     el.classList.remove("unfolded");
     overlay().classList.remove("show");
     letterSlot().appendChild(el);
+    /* DO NOT hide doneBtn here */
   }
 
   function showBouquet(){
