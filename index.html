@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Letter</title>
 
 <style>
@@ -31,8 +30,18 @@ button{
   cursor:pointer;
 }
 
-#error{ color:red; margin-top:10px; font-size:24px; }
-#message{ color:#ff5c8a; margin-top:10px; font-weight:bold; font-size:32px; }
+#error{
+  color:red;
+  margin-top:10px;
+  font-size:24px;
+}
+
+#message{
+  color:#ff5c8a;
+  margin-top:10px;
+  font-weight:bold;
+  font-size:32px;
+}
 
 #envelopeArea{
   display:none;
@@ -42,7 +51,7 @@ button{
   transform:translate(-50%, -50%);
 }
 
-/* overlay for unfolded letter */
+/* overlay */
 #letterOverlay{
   position:fixed;
   inset:0;
@@ -50,9 +59,12 @@ button{
   display:none;
   z-index:9998;
 }
-#letterOverlay.show{ display:block; }
 
-/* ENVELOPE WRAPPER */
+#letterOverlay.show{
+  display:block;
+}
+
+/* ENVELOPE */
 #envelope{
   width:280px;
   height:180px;
@@ -63,7 +75,10 @@ button{
   overflow:hidden;
   border-radius:16px;
 }
-#envelope.open{ overflow:visible; }
+
+#envelope.open{
+  overflow:visible;
+}
 
 /* SLOT */
 #letterSlot{
@@ -101,21 +116,18 @@ button{
   z-index:70;
 }
 
-/* PAPER (KEEP THIS FONT) */
+/* PAPER */
 .paper{
   position:relative;
   height:100%;
   box-sizing:border-box;
   padding:14px 16px;
   text-align:left;
-
-  font-family:"Brush Script MT","Lucida Handwriting","Apple Chancery",cursive;
-  font-size:24px;
+  font-family:Baskerville,"Baskerville Old Face","Times New Roman",serif;
+  font-size:18px;
   line-height:1.55;
-
   border-radius:12px;
   overflow:hidden;
-
   background:
     repeating-linear-gradient(
       45deg,
@@ -125,18 +137,12 @@ button{
       rgba(255,255,255,0.02) 4px
     ),
     linear-gradient(#fff,#fbfbfb);
-
   box-shadow:
     0 14px 26px rgba(0,0,0,.22),
     inset 0 -14px 22px rgba(0,0,0,.06);
 }
 
-.greeting{
-  font-size:30px;
-  margin:0 0 12px 0;
-}
-
-/* ===== FOLDED STATE (no readable text) ===== */
+/* folded */
 #envelope.open .letter:not(.unfolded) .paper{
   padding:0;
   overflow:hidden;
@@ -154,17 +160,17 @@ button{
   background:rgba(0,0,0,0.18);
   box-shadow:0 1px 0 rgba(255,255,255,0.35);
 }
+
 #envelope.open .letter:not(.unfolded) .paper::before{ top:33%; }
 #envelope.open .letter:not(.unfolded) .paper::after{ top:66%; }
 
-/* ===== UNFOLDED (A4) ===== */
+/* unfolded */
 .letter.unfolded{
   position:fixed;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
   z-index:9999;
-
   width:min(90vw, 850px);
   height:min(88vh, 1000px);
   aspect-ratio:210 / 297;
@@ -172,27 +178,26 @@ button{
 
 .letter.unfolded .paper{
   padding:70px 75px;
-  font-size:26px;
-  line-height:1.75;
+  font-size:19px;
+  line-height:1.85;
   letter-spacing:0.2px;
   overflow:auto;
   color:#000;
 }
 
-/* spacing + indent */
 .letter.unfolded .paper p{
   margin:0 0 18px 0;
 }
+
 .letter.unfolded .paper p:not(.greeting):not(.signatureLine){
   text-indent:40px;
 }
 
-/* signature block */
 .signature{
   margin-top:35px;
   text-align:right;
-  font-size:28px;
 }
+
 .signature .signatureLine{
   margin:0;
   text-indent:0;
@@ -223,10 +228,12 @@ button{
   background:rgba(243,168,187,.55);
   clip-path:polygon(0 0, 0 100%, 50% 55%);
 }
+
 .rightFold{
   background:rgba(243,168,187,.55);
   clip-path:polygon(100% 0, 100% 100%, 50% 55%);
 }
+
 .bottomFold{
   background:#ee8ea7;
   clip-path:polygon(-2% 100%, 100% 100%, 50% 55%);
@@ -247,6 +254,7 @@ button{
   border-radius:16px 16px 0 0;
   z-index:80;
 }
+
 #envelope.open .topFlap{
   transform:rotateX(-180deg);
   z-index:10;
@@ -266,6 +274,7 @@ button{
   transition:opacity .25s ease, transform .25s ease;
   pointer-events:none;
 }
+
 .heart::before,
 .heart::after{
   content:"";
@@ -275,6 +284,7 @@ button{
   background:#c21833;
   border-radius:50%;
 }
+
 .heart::before{ top:-14px; left:0; }
 .heart::after{ left:-14px; top:0; }
 
@@ -283,7 +293,7 @@ button{
   transform:translate(-50%,-50%) rotate(45deg) scale(.7);
 }
 
-/* DONE BTN (shows AFTER you close the letter) */
+/* DONE BTN */
 #doneBtn{
   margin-top:18px;
   display:none;
@@ -298,7 +308,10 @@ button{
   background:rgba(0,0,0,.2);
   z-index:10000;
 }
-#bouquet.show{ display:grid; }
+
+#bouquet.show{
+  display:grid;
+}
 
 .bouquetCard{
   width:320px;
@@ -307,26 +320,28 @@ button{
   padding:18px 18px 14px;
   box-shadow:0 18px 50px rgba(0,0,0,.22);
 }
+
 .bouquetImg{
   width:220px;
-  height:auto;
   display:block;
   margin:0 auto 12px auto;
 }
+
 .bouquetText{
   font-size:18px;
   color:#ff5c8a;
   font-weight:bold;
-  margin-bottom:10px;
-  font-family:monospace;
+  margin-bottom:12px;
 }
+
 .bouquetClue{
-  margin-top:6px;
+  margin-top:10px;
   font-family:monospace;
 }
+
 .closeBouquet{
   display:block;
-  margin:16px auto 0 auto;
+  margin:20px auto 0 auto;
   padding:8px 20px;
   border:none;
   border-radius:8px;
@@ -336,165 +351,3 @@ button{
 }
 </style>
 </head>
-
-<body>
-  <div id="codeArea">
-    <h2>Enter access code</h2>
-    <p>Hint: our special date ;)</p>
-    <input id="codeInput" type="text" placeholder="Enter code">
-    <br><br>
-    <button onclick="checkCode()">Submit</button>
-    <p id="error"></p>
-    <p id="message"></p>
-  </div>
-
-  <div id="letterOverlay" onclick="foldBack()"></div>
-
-  <div id="envelopeArea">
-    <div id="envelope" onclick="openEnvelope()">
-
-      <div id="letterSlot">
-        <div class="letter" id="letter" onclick="toggleLetter(event)">
-          <div class="paper">
-            <p class="greeting">My Dearest Jessica,</p>
-
-            <p>I'm not good with words, so I apologize if this love letter doesn't turn out like your typical love letter. I want to express my love for you. I haven't always been good at showing it, but I want you to know that I love you so much Jessica and I always will.</p>
-
-            <p>I still remember the first time I talked to you. It was the most random encounter ever. I didn't expect that random moment to turn into the best thing that ever happened to me. I remember how angelic and beautiful your voice sounded and until now I still love listening to it, it is so soothing and something about it makes me calm.</p>
-
-            <p>You have asked me many times, “How did you fall in love with me?” As I told you, I already liked you from the start, but I truly began seeing you as my partner that day when I had an argument with my parents and was having a bad day. On my way down to my room, I heard a girl singing a goofy song from my laptop. It made me feel so at ease, as if nothing else in the world mattered in that moment. I forgot everything, everyone and all my problems just because a girl was singing a goofy song. I remember standing in front of my room just listening to you, because I knew that if I went in, you would stop singing. I stood there for a minute, listening to your angelic voice. It made me so happy that a tear of happiness fell from my eyes. I thought to myself that I love this girl and I don’t want anything else but to be with her and make her happy.</p>
-
-            <p>We had a very good start to our relationship. We became close friends before dating, so we skipped a lot of the awkward phase that many couples experience. Our confession to each other might not have been the best way, but I don't regret it. We both loved it at that moment and we still love doing it to this day.</p>
-
-            <p>There are so many things I love about you, Jessica. I love your personality and the way you are with other people. Yes, you might not always like interacting with people and you might judge them sometimes, like I do, but you care deeply. You observe a lot and that makes you notice the little things about people. You are a very good friend. I experienced that myself and now that we're more than friends, I see how you are with your friends. They are very lucky to have someone as caring as you.</p>
-
-            <p>I love how mentally mature you are and how you talk to people. I remember the other day when you were on a call with your mom and her colleague was crying because she felt judged by everyone. You helped calm her down. You have such a caring way of speaking and you sympathize with people. Your voice plays a big part in that too. I’m sure I’m not the only one who feels this way when we hear you speak.</p>
-
-            <p>I love how patient you are. I know I get on your nerves many times, but you always try to understand me. I'm so lucky to be loved by you and to be your partner. I want to make you feel the same. I know you say that you do, but I also know there is sometimes a small hesitation inside you when you say it because of how I treated you. I don't want this love letter to turn into an apology letter, so I won't go too deep into that. I just promise to become the best version of myself and to be a man who truly deserves a wonderful woman like you.</p>
-
-            <p>I love your laugh and as I mentioned many times in this letter, I really love your voice. Whenever I hear you laugh or smile, it makes me so happy that I can make you happy. That is all I want. I even love how you snore. My night doesn’t feel complete if I don’t have my laptop beside me with you sleeping and snoring.</p>
-
-            <p>I love your body, there is nothing I would change about it. You are the most gorgeous woman I have ever met. I'll be with you throughout your fitness journey and I’m very excited not to see you getting slimmer, but to see you doing something that will make you feel good about yourself. Although you are already as perfect as you are, you still don’t like how you look. I wish you could see yourself how I see you, then you’ll see the most beautiful woman ever.</p>
-
-            <p>I am so grateful for everything you have done for me. I will never forget how you contacted people on that Facebook page when I broke my phone and how you joined multiple Facebook groups to help me find work and a bed when I was moving out. Even though you didn’t know those people and even though they were from a country you have never been to, you didn't hesitate to help me. I am truly thankful for that.</p>
-
-            <p>I'm also thankful that you have stayed by my side no matter what. Yes, we broke up a few times, but we always found our way back to each other because you kept choosing me.</p>
-
-            <p>Jessica, you are my inspiration and motivation for everything. I work hard in the gym so I can proudly stand beside a beautiful woman like you without feeling undeserving. I work these jobs so I can see you and build a good future together and so I can give you the things you want.</p>
-
-            <p>There is so much more I want to tell you, mahal, but this letter is already long. I was nervous that it wouldn’t be long enough, but once I started writing, everything came to my mind and my thoughts just poured onto this letter.</p>
-
-            <p>I love you so much, Jessica Lei Linao De Leon. You are the most amazing woman I have ever met. I cannot wait to see you in June, I also can't wait to move in with you, have house, to marry you, to have kids and build a family with you, MAYBE even have cows and guinea pigs, to explore the world together and to spend the rest of my life with you.</p>
-
-            <p>I'll always be by your side, just as you've always been for me. As you already know I am your biggest fan (and hater), I'll support you on everything you do. I love you so much mahal♥️.</p>
-
-            <div class="signature">
-              <p class="signatureLine">Forever yours,</p>
-              Auztin
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="envBody">
-        <div class="leftFold"></div>
-        <div class="rightFold"></div>
-        <div class="bottomFold"></div>
-      </div>
-
-      <div class="heart"></div>
-      <div class="topFlap"></div>
-    </div>
-
-    <button id="doneBtn" onclick="showBouquet()">done reading?</button>
-  </div>
-
-  <div id="bouquet" aria-hidden="true">
-    <div class="bouquetCard">
-      <img src="peonies.png" class="bouquetImg" alt="Peonies bouquet">
-      <div class="bouquetText">for you&lt;3</div>
-      <div class="bouquetClue">also... check your ate's room 😉</div>
-      <button class="closeBouquet" onclick="closeBouquet()">close</button>
-    </div>
-  </div>
-
-  <audio id="bgMusic" loop>
-    <source src="mitski.mp3" type="audio/mpeg">
-  </audio>
-
-<script>
-  const letter = () => document.getElementById("letter");
-  const letterSlot = () => document.getElementById("letterSlot");
-  const overlay = () => document.getElementById("letterOverlay");
-
-  function checkCode(){
-    const code = document.getElementById("codeInput").value;
-
-    if(code === "10302025"){
-      document.getElementById("error").innerText = "";
-      document.getElementById("message").innerText = "Good girl";
-
-      setTimeout(() => {
-        document.getElementById("codeArea").style.display = "none";
-        document.getElementById("envelopeArea").style.display = "block";
-      }, 1000);
-    } else {
-      document.getElementById("error").innerText = "Who's special date is that??🤨";
-      document.getElementById("message").innerText = "";
-    }
-  }
-
-  function openEnvelope(){
-    const env = document.getElementById("envelope");
-    if(env.classList.contains("open")) return;
-
-    env.classList.add("open");
-    env.onclick = null;
-
-    const music = document.getElementById("bgMusic");
-    music.volume = 0;
-    music.play().catch(() => {});
-    const fadeInterval = setInterval(() => {
-      if (music.volume < 0.4) music.volume = Math.min(music.volume + 0.01, 0.4);
-      else clearInterval(fadeInterval);
-    }, 300);
-  }
-
-  function toggleLetter(e){
-    e.stopPropagation();
-    const el = letter();
-    const isUnfolded = el.classList.contains("unfolded");
-
-    if(!isUnfolded){
-      document.body.appendChild(el);
-      el.classList.add("unfolded");
-      overlay().classList.add("show");
-      // keep button hidden while reading
-      document.getElementById("doneBtn").style.display = "none";
-    } else {
-      foldBack();
-    }
-  }
-
-  function foldBack(){
-    const el = letter();
-    el.classList.remove("unfolded");
-    overlay().classList.remove("show");
-    letterSlot().appendChild(el);
-
-    // show button AFTER closing the letter (like before)
-    document.getElementById("doneBtn").style.display = "inline-block";
-  }
-
-  function showBouquet(){
-    document.getElementById("bouquet").classList.add("show");
-    document.getElementById("bouquet").setAttribute("aria-hidden","false");
-  }
-
-  function closeBouquet(){
-    document.getElementById("bouquet").classList.remove("show");
-    document.getElementById("bouquet").setAttribute("aria-hidden","true");
-  }
-</script>
-</body>
-</html>
