@@ -52,7 +52,7 @@
   }
   #letterOverlay.show{ display:block; }
 
-  /* MODAL that holds letter + done button (stable on mobile) */
+  /* ===== Modal: keeps BUTTON in ONE stable place on all devices ===== */
   #letterModal{
     position:fixed;
     top:50%;
@@ -63,7 +63,9 @@
     flex-direction:column;
     align-items:center;
     gap:12px;
-    width:min(90vw, 850px);
+
+    /* "zoomed out" look */
+    width:min(86vw, 760px);
   }
   #letterModal.show{ display:flex; }
 
@@ -158,7 +160,6 @@
     color:transparent;
     text-shadow:none;
   }
-
   #envelope.open .letter:not(.unfolded) .paper::before,
   #envelope.open .letter:not(.unfolded) .paper::after{
     content:"";
@@ -172,25 +173,25 @@
   #envelope.open .letter:not(.unfolded) .paper::before{ top:33%; }
   #envelope.open .letter:not(.unfolded) .paper::after{ top:66%; }
 
-  /* ===== UNFOLDED (inside modal) ===== */
+  /* ===== UNFOLDED (inside modal, zoomed-out, scroll inside paper) ===== */
   .letter.unfolded{
-    position:relative;         /* IMPORTANT: modal is fixed, letter is relative */
-    top:auto;
-    left:auto;
+    position:relative;
     transform:none;
-    z-index:9999;
+    left:auto;
+    top:auto;
 
     width:100%;
-    height:min(88vh, 1000px);
-    aspect-ratio:210 / 297;
+    height:min(72vh, 880px);  /* keeps it "zoomed out" on phone */
+    border-radius:12px;
   }
 
   .letter.unfolded .paper{
-    padding:70px 75px;
-    font-size:26px;
+    height:100%;
+    overflow:auto;          /* scroll INSIDE letter */
+    padding:clamp(28px, 4.5vw, 64px);
+    font-size:clamp(18px, 2.2vw, 24px);
     line-height:1.75;
     letter-spacing:0.2px;
-    overflow:auto;
     color:#000;
   }
 
@@ -202,14 +203,23 @@
   }
 
   .signature{
-    margin-top:35px;
+    margin-top:28px;
     text-align:right;
-    font-size:28px;
+    font-size:clamp(18px, 2.3vw, 26px);
   }
   .signature .signatureLine{
     margin:0;
     text-indent:0;
   }
+
+  /* DONE BTN: always same place (under modal) */
+  #doneBtn{
+    display:none;
+    padding:12px 26px;
+    border-radius:10px;
+    box-shadow:0 10px 18px rgba(0,0,0,.18);
+  }
+  #letterModal.show #doneBtn{ display:inline-block; }
 
   /* ENVELOPE BODY */
   .envBody{
@@ -296,19 +306,6 @@
     transform:translate(-50%,-50%) rotate(45deg) scale(.7);
   }
 
-  /* DONE BTN (inside modal, under letter) */
-  #doneBtn{
-    display:none;
-    position:static;
-    transform:none;
-    padding:12px 26px;
-    border-radius:10px;
-    box-shadow:0 10px 18px rgba(0,0,0,.18);
-  }
-  #letterModal.show #doneBtn{
-    display:inline-block;
-  }
-
   /* BOUQUET */
   #bouquet{
     position:fixed;
@@ -370,7 +367,7 @@
 
   <div id="letterOverlay" onclick="foldBack()"></div>
 
-  <!-- stable container for unfolded view -->
+  <!-- Modal: letter goes here when unfolded, button always under it -->
   <div id="letterModal">
     <button id="doneBtn" onclick="showBouquet()">done reading?</button>
   </div>
@@ -491,7 +488,9 @@
     if(!isUnfolded){
       const modal = document.getElementById("letterModal");
       modal.classList.add("show");
-      modal.insertBefore(el, document.getElementById("doneBtn")); // letter above button
+
+      // put letter ABOVE the button (button stays fixed under letter always)
+      modal.insertBefore(el, document.getElementById("doneBtn"));
 
       el.classList.add("unfolded");
       overlay().classList.add("show");
@@ -504,6 +503,8 @@
     const el = letter();
     el.classList.remove("unfolded");
     overlay().classList.remove("show");
+
+    // back into envelope slot
     letterSlot().appendChild(el);
 
     document.getElementById("letterModal").classList.remove("show");
