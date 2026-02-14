@@ -5,321 +5,334 @@
 <title>Letter</title>
 
 <style>
-body{
-  margin:0;
-  background:#f2aebaef;
-  font-family:monospace;
-  text-align:center;
-  padding-top:80px;
-}
+  body{
+    margin:0;
+    background:#f2aebaef;
+    font-family:monospace;
+    text-align:center;
+    padding-top:80px;
+  }
 
-input{
-  padding:10px;
-  font-size:16px;
-  border-radius:6px;
-  border:1px solid #ccc;
-}
+  input{
+    padding:10px;
+    font-size:16px;
+    border-radius:6px;
+    border:1px solid #ccc;
+  }
 
-button{
-  padding:10px 20px;
-  font-size:16px;
-  border:none;
-  border-radius:6px;
-  background:#ff5c8a;
-  color:white;
-  cursor:pointer;
-}
+  button{
+    padding:10px 20px;
+    font-size:16px;
+    border:none;
+    border-radius:6px;
+    background:#ff5c8a;
+    color:white;
+    cursor:pointer;
+  }
 
-#error{ color:red; margin-top:10px; font-size:24px; }
-#message{ color:#ff5c8a; margin-top:10px; font-weight:bold; font-size:32px; }
+  #error{ color:red; margin-top:10px; font-size:24px; }
+  #message{ color:#ff5c8a; margin-top:10px; font-weight:bold; font-size:32px; }
 
-#envelopeArea{
-  display:none;
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-}
+  #envelopeArea{
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+  }
 
-/* overlay for unfolded letter */
-#letterOverlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.18);
-  display:none;
-  z-index:9998;
-}
-#letterOverlay.show{ display:block; }
+  /* overlay for unfolded letter */
+  #letterOverlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.18);
+    display:none;
+    z-index:9998;
+  }
+  #letterOverlay.show{ display:block; }
 
-/* ENVELOPE WRAPPER */
-#envelope{
-  width:280px;
-  height:180px;
-  position:relative;
-  cursor:pointer;
-  transform-style:preserve-3d;
-  perspective:1000px;
-  overflow:hidden;
-  border-radius:16px;
-}
-#envelope.open{ overflow:visible; }
+  /* ENVELOPE WRAPPER */
+  #envelope{
+    width:280px;
+    height:180px;
+    position:relative;
+    cursor:pointer;
+    transform-style:preserve-3d;
+    perspective:1000px;
+    overflow:hidden;
+    border-radius:16px;
+  }
+  #envelope.open{ overflow:visible; }
 
-/* SLOT */
-#letterSlot{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:50;
-}
+  /* SLOT */
+  #letterSlot{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:50;
+  }
 
-/* LETTER */
-.letter{
-  position:absolute;
-  left:50%;
-  bottom:12px;
-  width:210px;
-  height:150px;
-  transform:translateX(-50%) translateY(220px);
-  z-index:60;
-  transition:transform .7s ease,width .35s ease,height .35s ease,opacity .15s ease,visibility .15s ease;
-  border-radius:12px;
-  pointer-events:auto;
-}
+  /* LETTER */
+  .letter{
+    position:absolute;
+    left:50%;
+    bottom:12px;
+    width:210px;
+    height:150px;
+    transform:translateX(-50%) translateY(220px);
+    z-index:60;
+    transition:transform .7s ease,width .35s ease,height .35s ease,opacity .15s ease,visibility .15s ease;
+    border-radius:12px;
+    pointer-events:auto;
+  }
 
-#envelope:not(.open) .letter{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-}
+  #envelope:not(.open) .letter{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+  }
 
-#envelope.open .letter{
-  opacity:1;
-  visibility:visible;
-  pointer-events:auto;
-  transform:translateX(-50%) translateY(-135px);
-  z-index:70;
-}
+  #envelope.open .letter{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+    transform:translateX(-50%) translateY(-135px);
+    z-index:70;
+  }
 
-/* PAPER */
-.paper{
-  position:relative;
-  height:100%;
-  box-sizing:border-box;
-  padding:14px 16px;
-  text-align:left;
-  font-family:Baskerville,"Baskerville Old Face","Times New Roman",serif;
-  font-size:18px;
-  line-height:1.55;
-  border-radius:12px;
-  overflow:hidden;
+  /* PAPER */
+  .paper{
+    position:relative;
+    height:100%;
+    box-sizing:border-box;
+    padding:14px 16px;
+    text-align:left;
 
-  background:
-    repeating-linear-gradient(
-      45deg,
-      rgba(0,0,0,0.02),
-      rgba(0,0,0,0.02) 2px,
-      rgba(255,255,255,0.02) 2px,
-      rgba(255,255,255,0.02) 4px
-    ),
-    linear-gradient(#fff,#fbfbfb);
+    /* readable love-letter body font */
+    font-family: Georgia, "Times New Roman", serif;
+    font-size:18px;
+    line-height:1.55;
 
-  box-shadow:
-    0 14px 26px rgba(0,0,0,.22),
-    inset 0 -14px 22px rgba(0,0,0,.06);
-}
+    border-radius:12px;
+    overflow:hidden;
 
-/* ===== FOLDED STATE (no readable text) ===== */
-#envelope.open .letter:not(.unfolded) .paper{
-  padding:0;
-  overflow:hidden;
-  color:transparent;
-  text-shadow:none;
-}
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgba(0,0,0,0.02),
+        rgba(0,0,0,0.02) 2px,
+        rgba(255,255,255,0.02) 2px,
+        rgba(255,255,255,0.02) 4px
+      ),
+      linear-gradient(#fff,#fbfbfb);
 
-#envelope.open .letter:not(.unfolded) .paper::before,
-#envelope.open .letter:not(.unfolded) .paper::after{
-  content:"";
-  position:absolute;
-  left:10px;
-  right:10px;
-  height:1px;
-  background:rgba(0,0,0,0.18);
-  box-shadow:0 1px 0 rgba(255,255,255,0.35);
-}
-#envelope.open .letter:not(.unfolded) .paper::before{ top:33%; }
-#envelope.open .letter:not(.unfolded) .paper::after{ top:66%; }
+    box-shadow:
+      0 14px 26px rgba(0,0,0,.22),
+      inset 0 -14px 22px rgba(0,0,0,.06);
+  }
 
-/* ===== UNFOLDED (A4) ===== */
-.letter.unfolded{
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  z-index:9999;
+  /* cursive for greeting + signature only */
+  .greeting,
+  .signature,
+  .signatureLine{
+    font-family: "Brush Script MT","Lucida Handwriting","Apple Chancery",cursive;
+  }
+  .greeting{
+    font-size:26px;
+    margin:0 0 12px 0;
+  }
 
-  width:min(90vw, 850px);
-  height:min(88vh, 1000px);
-  aspect-ratio:210 / 297;
-}
+  /* ===== FOLDED STATE (no readable text) ===== */
+  #envelope.open .letter:not(.unfolded) .paper{
+    padding:0;
+    overflow:hidden;
+    color:transparent;
+    text-shadow:none;
+  }
 
-.letter.unfolded .paper{
-  padding:70px 75px;
-  font-size:19px;
-  line-height:1.85;
-  letter-spacing:0.2px;
-  overflow:auto;
-  color:#000;
-}
+  #envelope.open .letter:not(.unfolded) .paper::before,
+  #envelope.open .letter:not(.unfolded) .paper::after{
+    content:"";
+    position:absolute;
+    left:10px;
+    right:10px;
+    height:1px;
+    background:rgba(0,0,0,0.18);
+    box-shadow:0 1px 0 rgba(255,255,255,0.35);
+  }
+  #envelope.open .letter:not(.unfolded) .paper::before{ top:33%; }
+  #envelope.open .letter:not(.unfolded) .paper::after{ top:66%; }
 
-/* Word-like paragraph spacing + indent (NOT for greeting) */
-.letter.unfolded .paper p{
-  margin:0 0 18px 0;
-}
-.letter.unfolded .paper p:not(.greeting):not(.signatureLine){
-  text-indent:40px;
-}
+  /* ===== UNFOLDED (A4) ===== */
+  .letter.unfolded{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    z-index:9999;
 
-/* signature block to the right */
-.signature{
-  margin-top:35px;
-  text-align:right;
-}
-.signature .signatureLine{
-  margin:0;
-  text-indent:0;
-}
+    width:min(90vw, 850px);
+    height:min(88vh, 1000px);
+    aspect-ratio:210 / 297;
+  }
 
-/* ENVELOPE BODY */
-.envBody{
-  position:absolute;
-  left:0;
-  bottom:0;
-  width:280px;
-  height:180px;
-  background:#f0dade;
-  border-radius:16px;
-  box-shadow:0 12px 26px rgba(0,0,0,.18);
-  overflow:hidden;
-  z-index:30;
-  pointer-events:none;
-}
+  .letter.unfolded .paper{
+    padding:70px 75px;
+    font-size:19px;
+    line-height:1.85;
+    letter-spacing:0.2px;
+    overflow:auto;
+    color:#000;
+  }
 
-.leftFold,.rightFold,.bottomFold{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-}
+  /* Word-like paragraph spacing + indent (NOT for greeting / signatureLine) */
+  .letter.unfolded .paper p{
+    margin:0 0 18px 0;
+  }
+  .letter.unfolded .paper p:not(.greeting):not(.signatureLine){
+    text-indent:40px;
+  }
 
-.leftFold{
-  background:rgba(243,168,187,.55);
-  clip-path:polygon(0 0, 0 100%, 50% 55%);
-}
-.rightFold{
-  background:rgba(243,168,187,.55);
-  clip-path:polygon(100% 0, 100% 100%, 50% 55%);
-}
-.bottomFold{
-  background:#ee8ea7;
-  clip-path:polygon(-2% 100%, 100% 100%, 50% 55%);
-}
+  /* signature block to the right */
+  .signature{
+    margin-top:35px;
+    text-align:right;
+    font-size:24px;
+  }
+  .signature .signatureLine{
+    margin:0;
+    text-indent:0;
+    font-size:24px;
+  }
 
-/* TOP FLAP */
-.topFlap{
-  position:absolute;
-  left:0;
-  top:0;
-  width:280px;
-  height:100px;
-  background:#ff2a3f;
-  clip-path:polygon(0 0,100% 0,50% 100%);
-  transform-origin:50% 0;
-  transform:rotateX(0deg);
-  transition:transform .6s ease;
-  border-radius:16px 16px 0 0;
-  z-index:80;
-}
-#envelope.open .topFlap{
-  transform:rotateX(-180deg);
-  z-index:10;
-}
+  /* ENVELOPE BODY */
+  .envBody{
+    position:absolute;
+    left:0;
+    bottom:0;
+    width:280px;
+    height:180px;
+    background:#f0dade;
+    border-radius:16px;
+    box-shadow:0 12px 26px rgba(0,0,0,.18);
+    overflow:hidden;
+    z-index:30;
+    pointer-events:none;
+  }
 
-/* HEART (stable) */
-.heart{
-  position:absolute;
-  left:50%;
-  top:60%;
-  width:28px;
-  height:28px;
-  background:#c21833;
-  transform:translate(-50%,-50%) rotate(45deg);
-  z-index:200;
-  box-shadow:0 8px 14px rgba(0,0,0,.28);
-  transition:opacity .25s ease, transform .25s ease;
-  pointer-events:none;
-}
-.heart::before,
-.heart::after{
-  content:"";
-  position:absolute;
-  width:28px;
-  height:28px;
-  background:#c21833;
-  border-radius:50%;
-}
-.heart::before{ top:-14px; left:0; }
-.heart::after{ left:-14px; top:0; }
+  .leftFold,.rightFold,.bottomFold{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+  }
 
-#envelope.open .heart{
-  opacity:0;
-  transform:translate(-50%,-50%) rotate(45deg) scale(.7);
-}
+  .leftFold{
+    background:rgba(243,168,187,.55);
+    clip-path:polygon(0 0, 0 100%, 50% 55%);
+  }
+  .rightFold{
+    background:rgba(243,168,187,.55);
+    clip-path:polygon(100% 0, 100% 100%, 50% 55%);
+  }
+  .bottomFold{
+    background:#ee8ea7;
+    clip-path:polygon(-2% 100%, 100% 100%, 50% 55%);
+  }
 
-/* DONE BTN */
-#doneBtn{
-  margin-top:18px;
-  display:none;
-}
+  /* TOP FLAP */
+  .topFlap{
+    position:absolute;
+    left:0;
+    top:0;
+    width:280px;
+    height:100px;
+    background:#ff2a3f;
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:50% 0;
+    transform:rotateX(0deg);
+    transition:transform .6s ease;
+    border-radius:16px 16px 0 0;
+    z-index:80;
+  }
+  #envelope.open .topFlap{
+    transform:rotateX(-180deg);
+    z-index:10;
+  }
 
-/* BOUQUET */
-#bouquet{
-  position:fixed;
-  inset:0;
-  display:none;
-  place-items:center;
-  background:rgba(0,0,0,.2);
-  z-index:10000;
-}
-#bouquet.show{ display:grid; }
+  /* HEART (stable) */
+  .heart{
+    position:absolute;
+    left:50%;
+    top:60%;
+    width:28px;
+    height:28px;
+    background:#c21833;
+    transform:translate(-50%,-50%) rotate(45deg);
+    z-index:200;
+    box-shadow:0 8px 14px rgba(0,0,0,.28);
+    transition:opacity .25s ease, transform .25s ease;
+    pointer-events:none;
+  }
+  .heart::before,
+  .heart::after{
+    content:"";
+    position:absolute;
+    width:28px;
+    height:28px;
+    background:#c21833;
+    border-radius:50%;
+  }
+  .heart::before{ top:-14px; left:0; }
+  .heart::after{ left:-14px; top:0; }
 
-.bouquetCard{
-  width:320px;
-  border-radius:18px;
-  background:#fff;
-  padding:18px 18px 14px;
-  box-shadow:0 18px 50px rgba(0,0,0,.22);
-}
-.bouquetImg{
-  width:220px;
-  height:auto;
-  display:block;
-  margin:0 auto 12px auto;
-}
-.bouquetText{
-  font-size:18px;
-  color:#ff5c8a;
-  font-weight:bold;
-  margin-bottom:12px;
-}
-<style>
-  
-.bouquetClue{
-   margin-top:10px;
-   font-family: monospace;
-}
+  #envelope.open .heart{
+    opacity:0;
+    transform:translate(-50%,-50%) rotate(45deg) scale(.7);
+  }
 
+  /* DONE BTN */
+  #doneBtn{
+    margin-top:18px;
+    display:none;
+  }
+
+  /* BOUQUET */
+  #bouquet{
+    position:fixed;
+    inset:0;
+    display:none;
+    place-items:center;
+    background:rgba(0,0,0,.2);
+    z-index:10000;
+  }
+  #bouquet.show{ display:grid; }
+
+  .bouquetCard{
+    width:320px;
+    border-radius:18px;
+    background:#fff;
+    padding:18px 18px 14px;
+    box-shadow:0 18px 50px rgba(0,0,0,.22);
+  }
+  .bouquetImg{
+    width:220px;
+    height:auto;
+    display:block;
+    margin:0 auto 12px auto;
+  }
+  .bouquetText{
+    font-size:18px;
+    color:#ff5c8a;
+    font-weight:bold;
+    margin-bottom:10px;
+  }
+  .bouquetClue{
+    margin-top:6px;
+    font-family:monospace;
+  }
   .closeBouquet{
     display:block;
-    margin:20px auto 0 auto;
+    margin:16px auto 0 auto;
     padding:8px 20px;
     border:none;
     border-radius:8px;
@@ -327,7 +340,6 @@ button{
     color:white;
     cursor:pointer;
   }
-
 </style>
 </head>
 
@@ -346,14 +358,13 @@ button{
 
   <div id="envelopeArea">
     <div id="envelope" onclick="openEnvelope()">
-
       <div id="letterSlot">
         <div class="letter" id="letter" onclick="toggleLetter(event)">
           <div class="paper">
 
             <p class="greeting">My Dearest Jessica,</p>
 
-            <p>I'm not good with words, so I apologize if this love letter doesn't turn out like your typical love letter. I want to express my love for you. I haven't always been good at showing it, but I want you to know that I love you so much, Jessica and I always will.</p>
+            <p>I'm not good with words, so I apologize if this love letter doesn't turn out like your typical love letter. I want to express my love for you. I haven't always been good at showing it, but I want you to know that I love you so much Jessica and I always will.</p>
 
             <p>I still remember the first time I talked to you. It was the most random encounter ever. I didn't expect that random moment to turn into the best thing that ever happened to me. I remember how angelic and beautiful your voice sounded and until now I still love listening to it, it is so soothing and something about it makes me calm.</p>
 
@@ -408,87 +419,87 @@ button{
   <div id="bouquet" aria-hidden="true">
     <div class="bouquetCard">
       <img src="peonies.png" class="bouquetImg" alt="Peonies bouquet">
-       <div class="bouquetText">for you&lt;3</div>
-          <div class="bouquetClue">
-            also... check your ate's room 😉
-          </div>
-          <button class="closeBouquet" onclick="closeBouquet()">close</button>
-          </div>
+      <div class="bouquetText">for you&lt;3</div>
+      <div class="bouquetClue">also... check your ate's room 😉</div>
+      <button class="closeBouquet" onclick="closeBouquet()">close</button>
     </div>
+  </div>
 
   <audio id="bgMusic" loop>
     <source src="mitski.mp3" type="audio/mpeg">
   </audio>
 
-  <script>
-    const letter = () => document.getElementById("letter");
-    const letterSlot = () => document.getElementById("letterSlot");
-    const overlay = () => document.getElementById("letterOverlay");
+<script>
+  const letter = () => document.getElementById("letter");
+  const letterSlot = () => document.getElementById("letterSlot");
+  const overlay = () => document.getElementById("letterOverlay");
 
-    function checkCode(){
-      const code = document.getElementById("codeInput").value;
+  function checkCode(){
+    const code = document.getElementById("codeInput").value;
 
-      if(code === "10302025"){
-        document.getElementById("error").innerText = "";
-        document.getElementById("message").innerText = "Good girl";
+    if(code === "10302025"){
+      document.getElementById("error").innerText = "";
+      document.getElementById("message").innerText = "Good girl";
 
-        setTimeout(() => {
-          document.getElementById("codeArea").style.display = "none";
-          document.getElementById("envelopeArea").style.display = "block";
-        }, 1000);
-      } else {
-        document.getElementById("error").innerText = "Who's special date is that??🤨";
-        document.getElementById("message").innerText = "";
-      }
+      setTimeout(() => {
+        document.getElementById("codeArea").style.display = "none";
+        document.getElementById("envelopeArea").style.display = "block";
+      }, 1000);
+    } else {
+      document.getElementById("error").innerText = "Who's special date is that??🤨";
+      document.getElementById("message").innerText = "";
     }
+  }
 
-    function openEnvelope(){
-      const env = document.getElementById("envelope");
-      if(env.classList.contains("open")) return;
+  function openEnvelope(){
+    const env = document.getElementById("envelope");
+    if(env.classList.contains("open")) return;
 
-      env.classList.add("open");
-      env.onclick = null;
+    env.classList.add("open");
+    env.onclick = null;
 
-      const music = document.getElementById("bgMusic");
-      music.volume = 0;
-      music.play().catch(() => {});
-      const fadeInterval = setInterval(() => {
-        if (music.volume < 0.4) music.volume = Math.min(music.volume + 0.01, 0.4);
-        else clearInterval(fadeInterval);
-      }, 300);
+    const music = document.getElementById("bgMusic");
+    music.volume = 0;
+    music.play().catch(() => {});
+    const fadeInterval = setInterval(() => {
+      if (music.volume < 0.4) music.volume = Math.min(music.volume + 0.01, 0.4);
+      else clearInterval(fadeInterval);
+    }, 300);
+  }
+
+  function toggleLetter(e){
+    e.stopPropagation();
+    const el = letter();
+    const isUnfolded = el.classList.contains("unfolded");
+
+    if(!isUnfolded){
+      document.body.appendChild(el);
+      el.classList.add("unfolded");
+      overlay().classList.add("show");
+
+      /* show "done reading?" WHEN letter opens (unfolds) */
+      document.getElementById("doneBtn").style.display = "inline-block";
+    } else {
+      foldBack();
     }
+  }
 
-    function toggleLetter(e){
-      e.stopPropagation();
-      const el = letter();
-      const isUnfolded = el.classList.contains("unfolded");
+  function foldBack(){
+    const el = letter();
+    el.classList.remove("unfolded");
+    overlay().classList.remove("show");
+    letterSlot().appendChild(el);
+  }
 
-      if(!isUnfolded){
-        document.body.appendChild(el);
-        el.classList.add("unfolded");
-        overlay().classList.add("show");
-        document.getElementById("doneBtn").style.display = "inline-block";
-      } else {
-        foldBack();
-      }
-    }
+  function showBouquet(){
+    document.getElementById("bouquet").classList.add("show");
+    document.getElementById("bouquet").setAttribute("aria-hidden","false");
+  }
 
-    function foldBack(){
-      const el = letter();
-      el.classList.remove("unfolded");
-      overlay().classList.remove("show");
-      letterSlot().appendChild(el);
-    }
-
-    function showBouquet(){
-      document.getElementById("bouquet").classList.add("show");
-      document.getElementById("bouquet").setAttribute("aria-hidden","false");
-    }
-
-    function closeBouquet(){
-      document.getElementById("bouquet").classList.remove("show");
-      document.getElementById("bouquet").setAttribute("aria-hidden","true");
-    }
-  </script>
+  function closeBouquet(){
+    document.getElementById("bouquet").classList.remove("show");
+    document.getElementById("bouquet").setAttribute("aria-hidden","true");
+  }
+</script>
 </body>
 </html>
