@@ -285,8 +285,13 @@ button{
 
 /* DONE BTN */
 #doneBtn{
-  margin-top:18px;
   display:none;
+  position: sticky;
+  bottom: 18px;
+  margin-top: 22px;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 10001;
 }
 
 /* BOUQUET */
@@ -392,7 +397,7 @@ button{
               <p class="signatureLine">Forever yours,</p>
               Auztin
             </div>
-
+                <button id="doneBtn" onclick="showBouquet()">done reading?</button>
           </div>
         </div>
       </div>
@@ -406,8 +411,6 @@ button{
       <div class="heart"></div>
       <div class="topFlap"></div>
     </div>
-
-    <button id="doneBtn" onclick="showBouquet()">done reading?</button>
   </div>
 
   <div id="bouquet" aria-hidden="true">
@@ -452,9 +455,6 @@ button{
     env.classList.add("open");
     env.onclick = null;
 
-    /* SHOW done button as soon as envelope opens */
-    document.getElementById("doneBtn").style.display = "inline-block";
-
     const music = document.getElementById("bgMusic");
     music.volume = 0;
     music.play().catch(() => {});
@@ -474,7 +474,7 @@ button{
       el.classList.add("unfolded");
       overlay().classList.add("show");
       /* also keep it visible here */
-      document.getElementById("doneBtn").style.display = "inline-block";
+      document.getElementById("doneBtn").style.display = "block";
     } else {
       foldBack();
     }
@@ -485,7 +485,7 @@ button{
     el.classList.remove("unfolded");
     overlay().classList.remove("show");
     letterSlot().appendChild(el);
-    /* DO NOT hide doneBtn here */
+    document.getElementById("doneBtn").style.display = "none";
   }
 
   function showBouquet(){
